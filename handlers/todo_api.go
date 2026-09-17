@@ -86,3 +86,28 @@ func UpdateTodoAPI(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Error(w, "Todo not found", http.StatusNotFound)
 }
+func DeleteTodoAPI(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	idString := strings.TrimPrefix(r.URL.Path, "/api/todos/")
+	id, err := strconv.Atoi(idString)
+
+	if err != nil {
+		http.Error(w, "Invalid Todo ID", http.StatusBadRequest)
+		return
+	}
+	for i := range Todos {
+		if Todos[i].ID == id {
+			Todos = append(Todos[:i], Todos[i+1:]...)
+
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(map[string]string{
+				"message": "Todo deleted successfully",
+			})
+			return
+		}
+	}
+	http.Error(w, "Todo not found", http.StatusNotFound)
+}
