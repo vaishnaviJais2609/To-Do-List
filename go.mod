@@ -1,3 +1,4 @@
-module to-do-list
+module todo-api
 
-go 1.23
+ go 1.21
+ 
