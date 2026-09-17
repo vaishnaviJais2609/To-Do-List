@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Todo List</h1>
+
+        <!-- Create Todo -->
+        <div class="box">
+            <h2>Create Todo</h2>
+
+            <form action="/create" method="POST">
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="Enter todo title"
+                    required
+                >
+
+                <button type="submit">Add Todo</button>
+            </form>
+        </div>
+
+        <!-- Todo List -->
+        <div class="box">
+            <h2>All Todos</h2>
+
+            {{if .}}
+
+                {{range .}}
+
+                    <div class="todo-card">
+
+                        <div>
+                            <h3>{{.Title}}</h3>
+
+                            <p>ID: {{.ID}}</p>
+
+                            {{if .Completed}}
+                                <p class="completed">Completed</p>
+                            {{else}}
+                                <p class="pending">Pending</p>
+                            {{end}}
+                        </div>
+
+                        <!-- Update -->
+                        <form action="/update" method="POST">
+                            <input
+                                type="hidden"
+                                name="id"
+                                value="{{.ID}}"
+                            >
+
+                            <input
+                                type="text"
+                                name="title"
+                                value="{{.Title}}"
+                                required
+                            >
+
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    name="completed"
+                                    {{if .Completed}}checked{{end}}
+                                >
+                                Completed
+                            </label>
+
+                            <button type="submit" class="update">
+                                Update
+                            </button>
+                        </form>
+
+                        <!-- Delete -->
+                        <form action="/delete" method="POST">
+                            <input
+                                type="hidden"
+                                name="id"
+                                value="{{.ID}}"
+                            >
+
+                            <button type="submit" class="delete">
+                                Delete
+                            </button>
+                        </form>
+
+                    </div>
+
+                {{end}}
+
+            {{else}}
+
+                <p class="empty">No todos available.</p>
+
+            {{end}}
+
+        </div>
+
+    </div>
+
+</body>
+</html>

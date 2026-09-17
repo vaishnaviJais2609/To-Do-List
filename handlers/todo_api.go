@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"to-do-list/To-Do-List/models"
+	"to-do-list/models"
 )
 
 var Todos []models.Todo
