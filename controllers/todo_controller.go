@@ -54,3 +54,49 @@ func GetTodo(c *gin.Context) {
 	}
 	c.JSON(200, todo)
 }
+
+func UpdateTodo(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(400, gin.H{"error": "invalid id"})
+		return
+	}
+	var input models.Todo
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	mu.Lock()
+	existing, ok := todos[id]
+	if ok {
+		existing.Title = input.Title
+		existing.Completed = input.Completed
+		todos[id] = existing
+	}
+	mu.Unlock()
+
+	if !ok {
+		c.JSON(404, gin.H{"error": "todo not found"})
+		return
+	}
+	c.JSON(200, existing)
+}
+
+func DeleteTodo(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(400, gin.H{"error": "invalid id"})
+		return
+	}
+	mu.Lock()
+	_, ok := todos[id]
+	if ok {
+		delete(todos, id)
+	}
+	mu.Unlock()
+	if !ok {
+		c.JSON(404, gin.H{"error": "todo not found"})
+		return
+	}
+	c.JSON(200, gin.H{"message": "todo deleted successfully"})
+}
