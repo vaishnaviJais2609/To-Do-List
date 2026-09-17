@@ -2,14 +2,20 @@ package main
 
 import (
 	"log"
+	"os"
 	"todo-api/routes"
 )
 
 func main() {
 	router := routes.SetupRouter()
 
-	log.Println("Server running on http://localhost:8080")
-	if err := router.Run(":8080"); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // fallback for local development
+	}
+
+	log.Println("Server running on port " + port)
+	if err := router.Run(":" + port); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}
 }
