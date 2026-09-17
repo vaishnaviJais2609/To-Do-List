@@ -1,0 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+}
+
+.container {
+    width: 600px;
+    margin: 50px auto;
+}
+
+.todo {
+    background: white;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+}
+
+button {
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+input {
+    padding: 8px;
+}

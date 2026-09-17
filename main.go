@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"to-do-list/handlers"
 )
 
@@ -30,6 +31,13 @@ func main() {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	})
 
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			http.NotFound(w, r)
+			return
+		}
+		http.Redirect(w, r, "/todos", http.StatusFound)
+	})
 	http.HandleFunc("/todos", handlers.TodoPage)
 
 	http.Handle(
@@ -40,8 +48,12 @@ func main() {
 		),
 	)
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 	log.Println("Server running at http://localhost:8080/todos")
-	err := http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8081", nil)
 	if err != nil {
 		log.Fatal(err)
 	}
